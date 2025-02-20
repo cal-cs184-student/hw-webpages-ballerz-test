@@ -71,6 +71,9 @@
 			</table>
 		</div>
 		
+		<h3> Task 1 Extra Credit</h3>
+		To optimize my code, I precomputed the edge coefficients that I calculated in my original helper function edge_function(). I precomputed y0-y1, y1-y2, y2-y0, x1-x0, x2-x1, x0-x2, x0*y1 - x1*y0, x1*y2 - x2*y1, and x2*y0 - x0*y2, so that I could directly use these values instead of recomputing them every time I called edge_function(). I then used std::chrono::high_resolution_clock, which gave me a table of times (in microseconds), of how long the function calls took. I kept track of the times for both my original code and with the optimized code where I precomputed the edge coefficients. The average time for the original code was 10.32 seconds, while the average time for the optimized code was 10 seconds, so it was slightly faster. <a href='https://docs.google.com/spreadsheets/d/1XMRzCwvJPujMMEBvhAlNKSkXhhOpLYsP0dCZ66juMuw/edit?gid=0#gid=0'> This spreadsheet </a> shows the entire timing comparison table and averages of both columns.
+
 		<h2>Task 2: Antialiasing by Supersampling</h2>
 		<h3> New Supersampling Algorithm</h3>
 		<ul>
