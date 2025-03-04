@@ -23,6 +23,11 @@
 			body {
 				font-family: 'Inter', sans-serif;
 			}
+
+			div {
+				padding:10px;
+			}
+
 		</style>
 	</head>
 	<body>
@@ -32,11 +37,11 @@
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cal-cs184-student.github.io/hw-webpages-ballerz-test/">https://cal-cs184-student.github.io/hw-webpages-ballerz-test/</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-ballerz-test/">https://cal-cs184-student.github.io/hw-webpages-ballerz-test/</a>
 
 		<br>
 		
-		Link to GitHub repository: (TODO) <a href="https://github.com/cal-cs184-student/hw-webpages-ballerz-test">https://github.com/cal-cs184-student/hw-webpages-ballerz-test</a>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw2-dawgs"https://github.com/cal-cs184-student/sp25-hw2-dawgs></a>
 
 		<!-- <figure>
 			<img src="teapot.png" alt="Teapot" style="width:50%"/>
@@ -56,7 +61,7 @@
 		
 		<h4>De Casteljau’s Algorithm and Implementation</h4>
 
-		<ul>In my implementation, I iterated through the original control points, then applied the interpolation formula (pi’ = (1-t)*points[i] + t*points[i+1]) to each pair of consecutive points. I stored all of these newly computed points in the vector intermediate_control_pts, which represents the intermediate control points at the parameter t in the next level of subdivision.</ul>
+		<ul>In our implementation, we iterated through the original control points, then applied the interpolation formula (pi’ = (1-t)*points[i] + t*points[i+1]) to each pair of consecutive points. We stored all of these newly computed points in the vector intermediate_control_pts, which represents the intermediate control points at the parameter t in the next level of subdivision.</ul>
 
 		<h4>Bezier Curve with 6 Control Points</h4>
 
@@ -121,7 +126,7 @@
 
 		<h4>Bezier Surface Implementation</h4>
 
-		<ul>De Casteljau’s algorithm extends to Bezier surfaces when it is first evaluated with the parameter u, then with the parameter v. To implement this, I evaluated each of the Bezier curves with the parameter u. This gave me a set of intermediate points, which I treated as the new set of control points and evaluated with the parameter v, to calculate the evaluated point on the Bezier surface.</ul>
+		<ul>De Casteljau’s algorithm extends to Bezier surfaces when it is first evaluated with the parameter u, then with the parameter v. To implement this, we evaluated each of the Bezier curves with the parameter u. This gave us a set of intermediate points, which we treated as the new set of control points and evaluated with the parameter v, to calculate the evaluated point on the Bezier surface.</ul>
 
 		<h4>bez/teapot.bez</h4>
 
@@ -141,7 +146,7 @@
 
 		<h4>Implementation</h4>
 
-		<ul>To implement the area-weighted vertex normals, I used the half-edge data structure to iterate through all faces that are adjacent to the vertex. For each face, I calculated the two edge vectors, from the current position to the two neighboring vertices. Then, I calculated the cross product of these two edge vectors and added it to the total. At the end, I normalized this total to get the area-weighted vertex normal.</ul>
+		<ul>To implement the area-weighted vertex normals, we used the half-edge data structure to iterate through all faces that are adjacent to the vertex. For each face, we calculated the two edge vectors, from the current position to the two neighboring vertices. Then, we calculated the cross product of these two edge vectors and added it to the total. At the end, we normalized this total to get the area-weighted vertex normal.</ul>
 
 		<h4>Flat shading (without vertex normals)</h4>
 
@@ -168,27 +173,133 @@
 		</div>
 
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		To flip, we gather the four vertices of the two triangle system, the two faces, the original edge, and its two half-edges. The half-edges are assigned new vertices (the left and right instead of top and bottom), the vertices are assigned the correct edges/half-edges, the faces are assigned the correct new half-edges.
+		We used the check_for function to ensure that all mesh objects were related correctly.
+
+		<h4>Before and after flips</h4>
+		Here we have the teapot before and after edge flips:
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="./img/image12.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image13.png" width="400px"/>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Implementation</h4>
+		To implement edge splits, we:
+		<ol>
+			<li>Gather the two faces, five full-edges, and four vertices of the two triangle system</li>
+			<li>Insert a point in the middle at the midpoint of the existing edge</li>
+			<li>Create three new full edges, six new half-eges, and two new faces</li>
+			<li>Reassign the original edge to connect the midpoint and original top point</li>
+			<li>Reassign the rest of the edges connect the left to center, center to right, and bottom to center vertices</li>
+			<li>The various half edges are assigned to have their correct next's, twins, and faces. The faces are assigned to the correct half-edges, and finally the vertices also to their correct half-edges</li>
+			<li>Mark the two edges along the original edge as old, and the two horizontal edges as new for the upsampling procedure later</li>
+		</ol>
+
+		<h4>Before and after splits</h4>
+		Here we have the teapot before, with some splits, and with splits and flips:
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="./img/image14.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image15.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image16.png" width="400px"/>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Implementation</h4>
+		We closely followed the steps provided in the upsample function. In order, we:
+		<ol>
+			<li>Compute all the new positions of the old vertices according to the old-vertex update rule </li>
+			<li>Compute the positions of the new vertices along split edges (which have not been added yet) according to the new-vertex update rule</li>
+			<li>Record the original edges of the mesh, since splitting will add edges that should not be split again</li>
+			<li>Split all the original edges of the mesh in an arbitrary order, marking the added vertices and edges as new</li>
+			<li>Consider all new edges, flip the ones that connect new and old vertices</li>
+			<li>Apply the new vertex positions that were previously computed for both old and new vertices</li>
+		</ol>
 
-		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>General behavior</h4>
+		Here's how our subdivision changes the torus:
 
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="./img/image17.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image18.png" width="400px"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		The originally sharp edges and corners are significantly rounded. If we instead subdivide nearby edges heavily, we find that the rounding 
+		is less severe and the original shape is preserved in those areas:
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="./img/image19.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image20.png" width="400px"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<h4>Cube asymmetry</h4>
+		We find that, as the spec says, the original cube becomes asymmetrical when subdivided:
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="./img/image21.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image22.png" width="400px"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		This is because in the original mesh not all vertices have the same degree. This means that during subdivision, their positions are updated differently despite the symmetry of the original object. To fix this, we can split every diagonal edge so that all vertices have degree 6:
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<td style="text-align: center;">
+						<img src="./img/image23.png" width="400px"/>
+					</td>
+					<td style="text-align: center;">
+						<img src="./img/image24.png" width="400px"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		The resulting cube is still round, but is perfectly symmetrical. 
 		</div>
 	</body>
 </html>
