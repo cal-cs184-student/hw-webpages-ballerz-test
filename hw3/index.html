@@ -127,7 +127,7 @@
 		
 		We generated num_samples uniform samples from the hemisphere, and used the analytic PDF for a hemisphere. For each sample, we cast a ray along this direction and check if it intersects the BVH. If it does, we record the emissivity of this point, adding to the total the intensity times the reflectance function, scaled by a cosine term according to Lambert’s rule and the PDF. All surfaces except lights (which have nonzero emissivity) will not contribute to the total. Then, this is averaged over the number of samples to complete the Monte Carlo estimate.
 
-		<hf>Importance sampling</hf>
+		<h4>Importance sampling</h4>
 		
 		Instead, we use num_samples for each light in the scene. Iterating over the lights, we cast num_samples rays toward the light using the light’s sampler. It returns the radiance and a PDF we can use. If this ray does not intersect the BVH, then it must be illuminating our point of interest. We add the same term as in hemispheric sampling, the reflectance function times the light’s intensity and a cosine term, scaled by the PDF. We then scale this total by the number of samples, to complete the Monte Carlo estimate and proceed to the next light.
 
