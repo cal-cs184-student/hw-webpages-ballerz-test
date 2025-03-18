@@ -199,7 +199,7 @@
 
 		The soft shadows, underneath the bunny, are much less noisier with higher numbers of rays. This is because the shadows are in reality smooth, and approximating this accurately requires a relatively high number of samples. In the last image, there is nearly no noise in the shadow!
 
-		<h5>Uniform Hemisphere Sampling vs. Lighting Sampling Results Comparison</h5>
+		<h4>Uniform Hemisphere Sampling vs. Lighting Sampling Results Comparison</h4>
 
 		Understandably, the images rendered with importance sampling are less noisy. Because we have information about the distribution of the radiance in the scene (namely, the positions of the lights), we can dedicate our samples to those positions instead of uniformly from an intersection and “catch” more of the light. If you zoom into the hemisphere sampling images, there are “pockmarks” from directions that did not end in a light within m bounces (apparently a large number of them). This is absent from the importance sampling images, which are relatively noise-free since the majority contribution to a pixels’ brightness is the direct reflection of light off of it (if there is one), rather than the later ones, which are geometrically scaled by cosine terms. Overall, this just results in more accurate lighting–it is the same phenomenon that we saw with naive Monte Carlo estimators versus ones that incorporate a good prior. 
 
