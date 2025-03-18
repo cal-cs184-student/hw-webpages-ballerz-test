@@ -209,7 +209,7 @@
 		
 		In my implementation of the indirect lighting function, I first calculated the hit point as hit_p = r.o + r.d * isect.t and the outgoing direction as w2o * (-r.d), with w2o being the world-to-object matrix. Then, I used the one_bounce_radiance() function to compute the light coming from the first bounce. If the ray has reached the maximum depth, I return the current accumulated radiance. Otherwise, I continue by calling sample_f() to sample an incoming direction, w_in, from the BSDF, and compute BSDF value f and the pdf. Then, I implemented Russian Roulette to terminate rays, where I return the current accumulated radiance with a probability of 0.3 after a certain depth. In addition, I used the o2w matrix to transform the sample direction w_in back to world space. I also created a new ray, indirect_ray, but slightly offset by EPS_F to avoid self-intersection. If this new ray intersects with the scene, I recursively call at_least_one_bounce_radiance() to compute the indirect radiance (L_indirect), and calculate the contribution of the next bounce using the formula (L_indirect * BSDF value f * cos_theta / pdf). If isAccumBounces is true, we return the total radiance which is the sum of both the current bounce and next bounces, otherwise we only include the next bounces. Finally, if no intersection is found, we only return the direct radiance, which is the current bounce.
 
-		<43>Images Rendered with Global Illumination</h3>
+		<h3>Images Rendered with Global Illumination</h3>
 
 		<p>Direct Lighting</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
