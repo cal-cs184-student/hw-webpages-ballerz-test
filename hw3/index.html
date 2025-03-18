@@ -468,9 +468,13 @@
 		<h2>Part 5: Adaptive Sampling</h2>
 
 		<h3>Explanation and Implementation of Adaptive Sampling</h3>
+
+		<h4>Adaptive Sampling Explanation</h4>
 		
 		Adaptive sampling is a technique used in Monte Carlo path tracing to efficiently reduce noise by avoiding using a higher number of samples per pixel and instead concentrating the samples on “difficult” pixels, or pixels that have higher variance in their sampled values. Adaptive sampling also adjusts the number of samples per pixel based on how quickly the pixel’s estimated color converges.
 
+		<h4>My Implementation</h4>
+		
 		In my implementation, I first initialized the total radiance of all samples for the given pixel, the sum of illuminance values, the sum of squared illuminance values, the number of samples collected so far for the given pixel, as well as the pixel’s location in the image. Then, while the number of samples collected so far is less than the maximum allowed samples, I use batches to collect multiple samples before checking for convergence, and trace batch_count rays through the pixel. I did this by using the get_sample() function to generate a sample within the pixel, creating a ray from the camera through the sample point, estimating the ray’s radiance using the est_radiance_global_illumination() function, and then accumulating the respective values for the total radiance, illuminance, and squared illuminance. After each batch, I increment the number of samples collected so far by batch_count. Then, I checked for convergence, which occurs if I = 1.96 * standard deviation of illuminance / sqrt(n) is less than or equal to maxTolerance * mean of illuminance, and I calculated the mean of standard deviation of illuminance using the formulas given in the task description. Finally, I divided by n to compute the average radiance, and stored this final computed color in sampleBuffer.
 
 		<p>Sample Rate Image and Noise-Free Rendered Result</p>
