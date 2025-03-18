@@ -54,11 +54,11 @@
 		In ray generation, my implementation takes in normalized coordinates in the image space and maps them to the sensor, or coordinates in the camera space. I implemented this coordinate transformation by using the formulas sensorX = (2*x - 1) * tan(hFov/2) and sensorY = (2*y - 1) * tan(vFov/2). sensorZ is set to -1 because in camera space, the ray points forward in the negative z-direction. This ray, which is in the camera space, is then transformed into a ray in world space using the camera-to-world rotation matrix (c2w). After normalizing this ray, I initialize a ray with its origin as the camera’s position, and its direction as the normalized world space ray. I also set this ray’s min and max bounds to nclip and fclip, the near and far clipping planes.
 		For the primitive intersection part, given the inputted pixel, multiple samples are generated based on the number of samples (ns_aa). For each sample, a ray is generated from the camera through the sample point. Then, my implementation calls est_radiance_global_illumination() on each ray to calculate the ray’s radiance, and all of these rays’ radiances are averaged. The pixel’s radiance is then updated in sampleBuffer.
 
-		<h4>Triangle Intersection Algorithm</h4>
+		<h3>Triangle Intersection Algorithm</h3>
 
 		For my implementation, I decided to use the Möller-Trumbore intersection algorithm, where I do multiple checks to see if there is a valid intersection, including checking if the ray is parallel to the triangle and checking if the intersection point is outside of the triangle. First, I calculated two edges of the triangle (edge1, edge2) using its vertices, then the cross product between the ray’s direction and edge2 (h). The determinant is calculated as the dot product between edge1 and this cross product h. If the determinant is close to 0, it means the ray is parallel to the triangle, so there is no intersection and I return false. Otherwise, I continued by computing the barycentric coordinates (u,v) to see if the intersection is inside the triangle. I first calculated the inverse of the determinant (f) and the difference between the ray’s origin and the first point (s). If u = f*dot(s,h) is not within [0,1], it means the intersection is outside of the triangle and I return false. Otherwise, I continued by calculating q, the cross product between s and edge1. If v = f*dot(ray’s direction, q) is not within [0,1], or if u+v is greater than 1, the point is outside the triangle and I return false. Otherwise, I do one final check. I calculate t = f*dot(edge2,q). If t is not within [min_t, max_t], the intersection is invalid so I return false. If t is within this range, it means we have found a valid intersection, so I update the ray’s max_t to this intersection point. My implementation then calculates the interpolated surface normal using the barycentric coordinates, as (1-u-v)*n1 + u*n2 + v*n3, and stores all of the intersection information in the Intersection object.
 		
-		<p>Images with Normal Shading</p>
+		<h3>Images with Normal Shading</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -82,7 +82,7 @@
 
 		For my BVH construction algorithm, I first compute the bounding box by iterating through each primitive and expand the bounding box to include each primitive’s bounding box. I create a new BVH node with this computed bounding box and store the start and end iterators to reference the primitives. If the number of primitives is no more than max_leaf_size, the node we created is a leaf node and the current node is returned. Then, for picking the splitting point, my implementation finds the longest axis (either x, y, or z) to divide the primitives, and sorts the primitives based on the centroid of their bounding boxes in the chosen axis or direction. I find the middle point (between start and num_primitives) to divide the primitives into two halves, and recursively construct the left (start to mid) and right (mid to end) subtrees, before returning the node at the end.
 
-		<p>Images with Normal Shading Rendered with BVH Acceleration</p>
+		<h3>Images with Normal Shading Rendered with BVH Acceleration</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -106,7 +106,7 @@
 			</table>
 		</div>
 
-		<p>Rendering Time Comparison</p>
+		<h3>Rendering Time Comparison</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -131,6 +131,8 @@
 		
 		Instead, we use num_samples for each light in the scene. Iterating over the lights, we cast num_samples rays toward the light using the light’s sampler. It returns the radiance and a PDF we can use. If this ray does not intersect the BVH, then it must be illuminating our point of interest. We add the same term as in hemispheric sampling, the reflectance function times the light’s intensity and a cosine term, scaled by the PDF. We then scale this total by the number of samples, to complete the Monte Carlo estimate and proceed to the next light.
 
+		<h3>Images with Both Implmentations</h3>
+		
 		<p>Importance Sampling</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
@@ -167,7 +169,7 @@
 			</table>
 		</div>
 
-		<p>Now focusing on the CBbunny scene:</p>
+		<h3>Now focusing on the CBbunny scene:</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -259,7 +261,7 @@
 			</table>
 		</div>
 
-		<p>Scene with only direct illumination:</p>
+		<h3>Scene with only direct illumination:</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -271,7 +273,7 @@
 			</table>
 		</div>
 
-		<p>Scene with only global illumination:</p>
+		<h3>Scene with only global illumination:</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -283,7 +285,7 @@
 			</table>
 		</div>
 
-		<p>Un-accumulated/accumulated bounces (isAccumBounces) for CBbunny.dae</p>
+		<h3>Un-accumulated/accumulated bounces (isAccumBounces) for CBbunny.dae</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<p>m=0: These are the same since there's no bounces.</p>
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
@@ -375,7 +377,7 @@
 			</table>
 		</div>
 
-		<p>Scene with Russian Roulette Termination for CBbunny</p>
+		<h3>Scene with Russian Roulette Termination for CBbunny</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -417,7 +419,7 @@
 			</table>
 		</div>
 
-		<p>Different Sampling Rates s with 4 Light Rays</p>
+		<h3>Different Sampling Rates s with 4 Light Rays</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -477,7 +479,7 @@
 		
 		In my implementation, I first initialized the total radiance of all samples for the given pixel, the sum of illuminance values, the sum of squared illuminance values, the number of samples collected so far for the given pixel, as well as the pixel’s location in the image. Then, while the number of samples collected so far is less than the maximum allowed samples, I use batches to collect multiple samples before checking for convergence, and trace batch_count rays through the pixel. I did this by using the get_sample() function to generate a sample within the pixel, creating a ray from the camera through the sample point, estimating the ray’s radiance using the est_radiance_global_illumination() function, and then accumulating the respective values for the total radiance, illuminance, and squared illuminance. After each batch, I increment the number of samples collected so far by batch_count. Then, I checked for convergence, which occurs if I = 1.96 * standard deviation of illuminance / sqrt(n) is less than or equal to maxTolerance * mean of illuminance, and I calculated the mean of standard deviation of illuminance using the formulas given in the task description. Finally, I divided by n to compute the average radiance, and stored this final computed color in sampleBuffer.
 
-		<p>Sample Rate Image and Noise-Free Rendered Result</p>
+		<h3>Sample Rate Image and Noise-Free Rendered Result</h3>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<p>Scene 1 (CBspheres_lambertian): 2048 samples, rate/noise-free image</p>
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
@@ -508,7 +510,6 @@
 		</div>
 
 		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		
 		<!-- <h2>Additional Notes (please remove)</h2>
 		<ul>
